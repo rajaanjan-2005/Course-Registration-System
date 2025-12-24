@@ -1,31 +1,25 @@
 services:
   - type: web
-    name: spring-backend
-    rootDir: backend
-    env: java
-    plan: free
-    buildCommand: ./mvnw clean install -DskipTests
+    name: course-reg-system
+    rootDir: Course-Registration-System-SpringBoot
+    runtime: java
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: course-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: course-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: course-db
+          property: password
+    buildCommand: ./mvnw clean package -DskipTests
     startCommand: java -jar target/*.jar
-    envVars:
-      - key: DB_HOST
-        value: your-aiven-host
-      - key: DB_PORT
-        value: your-aiven-port
-      - key: DB_NAME
-        value: your-db-name
-      - key: DB_USER
-        value: your-db-user
-      - key: DB_PASS
-        value: your-db-password
 
-  - type: static
-    name: website-frontend
-    rootDir: frontend
-    staticPublishPath: ./
-    buildCommand: "" # if pure HTML/CSS/JS, keep empty
-    envVars:
-      - key: API_URL
-        fromService:
-          name: spring-backend
-          type: web
-          property: url
+databases:
+  - name: course-db
+    databaseName: course_reg_sym
+    user: course_user
